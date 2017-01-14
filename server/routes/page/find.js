@@ -1,6 +1,7 @@
 var
   mongoose = require('mongoose'),
-  Page = require('./../../models/Page');
+  Page = require('./../../models/Page'),
+  Unknown = require('../../services/Unknown');
 
 module.exports = function(router) {
   // A GET request to /api/page/:url will 
@@ -10,7 +11,7 @@ module.exports = function(router) {
       if (err) {
         return res.send(err.message);
       } else if (!pageData) {
-        return res.send('No Page was found at url: ' + req.params.url);
+        return res.send(Unknown.getPageData(req.params.url));
       }
 
       return res.send(pageData);
