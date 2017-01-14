@@ -9,7 +9,7 @@ export default (
 		<Route path='/' component={ Main }>
 			<IndexRoute component={ HomeContainer } />
 
-			<Route path='results/:url' component={ ResultsContainer }/>
+			<Route path='/results/:url' component={ ResultsContainer }/>
 		</Route>
 	</Router>
 )
