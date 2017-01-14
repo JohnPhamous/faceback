@@ -1,6 +1,6 @@
 var
   mongoose = require('mongoose'),
-  Page = require('./../../models/Phrase');
+  Phrase = require('./../../models/Phrase');
 
 module.exports = function(router) {
   // A GET request to /api/phrase/:url will 
