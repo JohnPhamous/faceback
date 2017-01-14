@@ -1,4 +1,4 @@
-#!/Users/phamous/Desktop/social-analysis/bin/python
+#!/Users/phamous/Desktop/social-analysis/python-server/bin/python
 
 import sys
 import getopt

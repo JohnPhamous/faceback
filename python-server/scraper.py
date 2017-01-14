@@ -8,7 +8,6 @@ import config
 app_id = config.app_id
 app_secret = config.app_secret
 page_id = "pokemon"
-
 access_token = app_id + "|" + app_secret
 
 def request_all(url):
@@ -74,7 +73,7 @@ def processFacebookPageFeedStatus(status, access_token):
     status_id = status['id']
     status_message = '' if 'message' not in status.keys() else \
             unicode_normalize(status['message'])
-    print(status_message)
+    reduce_message =
     link_name = '' if 'name' not in status.keys() else \
             unicode_normalize(status['name'])
     status_type = status['type']
