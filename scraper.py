@@ -74,6 +74,7 @@ def processFacebookPageFeedStatus(status, access_token):
     status_id = status['id']
     status_message = '' if 'message' not in status.keys() else \
             unicode_normalize(status['message'])
+    print(status_message)
     link_name = '' if 'name' not in status.keys() else \
             unicode_normalize(status['name'])
     status_type = status['type']
@@ -117,7 +118,7 @@ def processFacebookPageFeedStatus(status, access_token):
     num_sads = get_num_total_reactions('sad', reactions)
     num_angrys = get_num_total_reactions('angry', reactions)
 
-    good_reception = num_loves + num_wows + num_likes + num_shares
+    good_reception = num_loves + num_wows + .5*num_likes + 1.5*num_shares
     bad_reception = 1.5*num_sads + 2*num_angrys
     # Return a tuple of all processed data
     return (status_id, status_message, link_name, status_type, status_link,
