@@ -9,22 +9,39 @@ export default React.createClass({
 		return {
 			pieData: [
 			    {
-			        value: 300,
+			        value: 100,
 			        color:"#F7464A",
 			        highlight: "#FF5A5E",
-			        label: "Red"
+			        label: "Like"
 			    },
 			    {
-			        value: 50,
+			        value: 30,
 			        color: "#46BFBD",
 			        highlight: "#5AD3D1",
-			        label: "Green"
+			        label: "Love"
 			    },
 			    {
-			        value: 100,
+			        value: 70,
 			        color: "#FDB45C",
 			        highlight: "#FFC870",
-			        label: "Yellow"
+			        label: "Haha"
+			    },			    {
+			        value: 10,
+			        color:"#F7464A",
+			        highlight: "#FF5A5E",
+			        label: "Wow"
+			    },
+			    {
+			        value: 3,
+			        color: "#46BFBD",
+			        highlight: "#5AD3D1",
+			        label: "Sad"
+			    },
+			    {
+			        value: 6,
+			        color: "#FDB45C",
+			        highlight: "#FFC870",
+			        label: "Angry"
 			    }
 			]
 		}
