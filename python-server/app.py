@@ -5,6 +5,7 @@ import datetime
 import csv
 import time
 import config
+import os
 
 app = Flask(__name__)
 app_id = config.app_id
@@ -14,18 +15,19 @@ access_token = app_id + "|" + app_secret
 
 def request_all(url):
     req = urllib2.Request(url)
-    success = False
-    while success is False:
-        try:
-            response = urllib2.urlopen(req)
-            if response.getcode() == 200:
-                success = True
-        except Exception, e:
-            print e
-            time.sleep(5)
-
-            print "Error for URL %s: %s" % (url, datetime.datetime.now())
-            print "Retrying."
+    response = urllib2.urlopen(req)
+    # success = False
+    # while success is False:
+    #     try:
+    #         response = urllib2.urlopen(req)
+    #         if response.getcode() == 200:
+    #             success = True
+    #     except Exception, e:
+    #         print e
+    #         time.sleep(5)
+    #
+    #         print "Error for URL %s: %s" % (url, datetime.datetime.now())
+    #         print "Retrying."
 
     return response.read()
 
@@ -168,16 +170,25 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
 def csv_to_json(page_id):
     print("Converting csv to json")
 
-    with open('data/%s_facebook_statuses.csv' % page_id, mode='r') as infile:
-        reader = csv.reader(infile)
-        with open('data/%s_facebook_statuses.txt' % page_id, mode="w") as outfile:
-            writer = csv.writer(outfile)
-            dat_dict = {rows[0]:rows[1] for rows in reader}
-    return jsonify(**dat_dict)
+    csv_file = open('data/%s_facebook_statuses.csv' % page_id, 'rU')
+    reader = csv.DictReader(csv_file, fieldnames = ( "status_id",
+                "status_message", "link_name", "status_type",
+                "status_link", "status_published", "num_reactions",
+                "num_comments", "num_shares", "num_likes", "num_loves",
+                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception"))
+    out = jsonify([row for row in reader])
+    print(type(out))
+    return out
+    # with open('data/%s_facebook_statuses.csv' % page_id, mode='r') as infile:
+    #     reader = csv.reader(infile)
+    #     with open('data/%s_facebook_statuses.txt' % page_id, mode="w") as outfile:
+    #         writer = csv.writer(outfile)
+    #         dat_dict = {rows[0]:rows[1:] for rows in reader}
+    # return jsonify(**dat_dict)
 
 @app.route('/')
 def index():
-    return "Welcome to our REST api. You can make requests with making a GET request to /req?"
+    return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?https://www.facebook.com/CitrusHack/ for example. <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
 
 @app.route('/req', methods=['GET'])
 def get_task():
@@ -185,11 +196,14 @@ def get_task():
     all_args = request.args.lists()
     fb_url = str(all_args[0][0])
     fb_id = fb_url.split('/')
-    scrapeFacebookPageFeedStatus(fb_id[3], access_token)
-
+    if not os.path.isfile('data/%s_facebook_statuses.csv' % fb_id[3]):
+        scrapeFacebookPageFeedStatus(fb_id[3], access_token)
+    print("Data exist already, skipping scrape")
     return csv_to_json(fb_id[3])
 
     # return fb_url
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.debug = True
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
