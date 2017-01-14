@@ -188,7 +188,7 @@ def csv_to_json(page_id):
 
 @app.route('/')
 def index():
-    return "Welcome to our REST api. You can make requests with making a GET request to /req?"
+    return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?https://www.facebook.com/CitrusHack/ for example. <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
 
 @app.route('/req', methods=['GET'])
 def get_task():
