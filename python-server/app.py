@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 import urllib2
 import json
 import datetime
@@ -151,7 +151,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
                         access_token))
 
                 num_processed += 1
-                if num_processed % 100 == 0:
+                if num_processed % 25 == 0:
                     print "%s Statuses Processed: %s" % \
                         (num_processed, datetime.datetime.now())
 
@@ -165,19 +165,37 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
         print "\nDone!\n%s Statuses Processed in %s" % \
                 (num_processed, datetime.datetime.now() - scrape_starttime)
 
+def csv_to_json(page_id):
+    print("Converting csv to json")
+    csv_file = open('data/%s_facebook_statuses.csv' % page_id, 'r')
+    json_file = open('data/%s_facebook_statuses.json' % page_id, 'w')
+    fields = ("status_id", "status_message", "link_name", "status_type",
+                "status_link", "status_published", "num_reactions",
+                "num_comments", "num_shares", "num_likes", "num_loves",
+                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception")
+    reader = csv.DictReader(csv_file, fields)
+    for row in reader:
+        json.dump(row, json_file)
+        json_file.write('\n')
+
+    resp = json_response(json_file, status_code=201)
+    return resp
+
 @app.route('/')
 def index():
     return "Welcome to our REST api. You can make requests with making a GET request to /req?"
-    
+
 @app.route('/req', methods=['GET'])
 def get_task():
     # Input is the Facebook URL
     all_args = request.args.lists()
     fb_url = str(all_args[0][0])
-
     fb_id = fb_url.split('/')
     scrapeFacebookPageFeedStatus(fb_id[3], access_token)
-    return fb_url
+
+    return csv_to_json(fb_id[3])
+
+    # return fb_url
 
 if __name__ == '__main__':
     app.run(debug=True)
