@@ -165,11 +165,18 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
         print "\nDone!\n%s Statuses Processed in %s" % \
                 (num_processed, datetime.datetime.now() - scrape_starttime)
 
+@app.route('/')
+def index():
+    return "Welcome to our REST api. You can make requests with making a GET request to /req?"
+    
 @app.route('/req', methods=['GET'])
 def get_task():
+    # Input is the Facebook URL
     all_args = request.args.lists()
     fb_url = str(all_args[0][0])
-    scrapeFacebookPageFeedStatus(fb_url, access_token)
+
+    fb_id = fb_url.split('/')
+    scrapeFacebookPageFeedStatus(fb_id[3], access_token)
     return fb_url
 
 if __name__ == '__main__':
