@@ -174,7 +174,7 @@ def csv_to_json(page_id):
         reader = csv.reader(infile)
         with open('data/%s_facebook_statuses.txt' % page_id, mode="w") as outfile:
             writer = csv.writer(outfile)
-            dat_dict = {rows[0]:rows[1] for rows in reader}
+            dat_dict = {rows[0]:rows[1:] for rows in reader}
     return jsonify(**dat_dict)
 
 @app.route('/')
