@@ -167,19 +167,13 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
 
 def csv_to_json(page_id):
     print("Converting csv to json")
-    csv_file = open('data/%s_facebook_statuses.csv' % page_id, 'r')
-    json_file = open('data/%s_facebook_statuses.json' % page_id, 'w')
-    fields = ("status_id", "status_message", "link_name", "status_type",
-                "status_link", "status_published", "num_reactions",
-                "num_comments", "num_shares", "num_likes", "num_loves",
-                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception")
-    reader = csv.DictReader(csv_file, fields)
-    for row in reader:
-        json.dump(row, json_file)
-        json_file.write('\n')
 
-    resp = json_response(json_file, status_code=201)
-    return resp
+    with open('data/%s_facebook_statuses.csv' % page_id, mode='r') as infile:
+        reader = csv.reader(infile)
+        with open('data/%s_facebook_statuses.txt' % page_id, mode="w") as outfile:
+            writer = csv.writer(outfile)
+            dat_dict = {rows[0]:rows[1] for rows in reader}
+    return jsonify(**dat_dict)
 
 @app.route('/')
 def index():
