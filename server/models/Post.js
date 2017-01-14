@@ -55,5 +55,5 @@ var postSchema = new Schema({
     
 });
 
-module.exports = mongoose.model('Page', pageSchema); 
+module.exports = mongoose.model('Post', postSchema); 
 

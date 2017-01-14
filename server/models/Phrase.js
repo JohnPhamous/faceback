@@ -46,5 +46,5 @@ var phraseSchema = new Schema({
     
 });
 
-module.exports = mongoose.model('Page', pageSchema); 
+module.exports = mongoose.model('Phrase', phraseSchema); 
 
