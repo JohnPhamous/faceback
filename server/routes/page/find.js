@@ -7,14 +7,11 @@ module.exports = function(router) {
   // A GET request to /api/page/:url will 
   // get all the data for a page
   router.get('/page/:url', function (req, res) {
-    Page.findOne({ url: req.params.url }, function (err, pageData) {
-      if (err) {
-        return res.send(err.message);
-      } else if (!pageData) {
-        return res.send(Unknown.getPageData(req.params.url));
-      }
-
-      return res.send(pageData);
-    });
+    Unknown
+      .getPageData(req.params.url)
+      .then(pageData => {
+        pageData.shift();
+        return res.send(pageData);
+      })
   });
 };

@@ -1,10 +1,8 @@
 import axios from 'axios'
 
 export default {
-	getPosts(var url) {
-		return axios.get(``)
-	},
-	getReactions(var postId) {
-		return axios.get(``)
+	getPageData(url) {
+		return axios
+			.get(`localhost:8000/api/page/${ encodeURIComponent(url) }`)
 	},
 }

@@ -1,11 +1,18 @@
 import React from 'react'
 import Results from '../components/Results'
+import Unknown from '../services/Unknown'
 
 export default React.createClass({
 	contextTypes: {
 		router: React.PropTypes.object.isRequired
 	},
 	getInitialState() {
+		Unknown
+			.getPageData(this.props.routeParams.url)
+			.then(pageData => {
+				console.log(pageData);
+			})
+
 		return {
 			pieData: [
 			    {

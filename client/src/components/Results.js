@@ -4,7 +4,7 @@ import { Pie as PieChart } from 'react-chartjs'
 export default React.createClass({
 	propTypes: {
 		url: React.PropTypes.string.isRequired,
-		pieData: React.PropTypes.object.isRequired
+		pieData: React.PropTypes.array.isRequired
 	},
 	render() {
 		console.log(this.props.pieData);
