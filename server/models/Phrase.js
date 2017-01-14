@@ -38,6 +38,7 @@ var phraseSchema = new Schema({
     // Timestamp Fields //
     //////////////////////
     
+    created: Date,
     modified: {
         type: Date,
         default: Date.now
