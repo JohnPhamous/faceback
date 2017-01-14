@@ -10,7 +10,7 @@ module.exports = function(router) {
       if (err) {
         return res.send(err.message);
       } else if (!phraseData) {
-        return res.send('No Phrase was found at url: ' + req.params.url);
+        return res.send('No Phrase was found titled: ' + req.params.phrase);
       }
 
       return res.send(phraseData);
