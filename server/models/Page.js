@@ -35,6 +35,12 @@ var pageSchema = new Schema({
     name: String,
     posts: [String], //URLs
 
+    like: Number, //aggregate of all posts, avoiding recal
+    love: Number,
+    haha: Number,
+    wow: Number,
+    sad: Number,
+    angry: Number,
     //////////////////////
     // Timestamp Fields //
     //////////////////////

@@ -3,7 +3,7 @@ var
   mongoose = require('mongoose'),
   app = express(),
   bodyParser = require('body-parser'),
-  // MONGO = require('./keys/mongo');
+  MONGO = require('./config/Mongo');
   port = process.env.PORT || 8000;
 
 // Allow us to return json to client
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
 });
 
 // Connect to our mongo database
-mongoose.connect('mongodb://localhost/school');
+mongoose.connect(MONGO.uri);
 
 // Instantiate all our routes
 require('./routes/index')(app);

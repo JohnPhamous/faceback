@@ -45,8 +45,8 @@ var postSchema = new Schema({
     //////////////////////
     // Timestamp Fields //
     //////////////////////
-
-    date: Date
+    
+    date: Date,
     created: Date,
     modified: {
         type: Date,

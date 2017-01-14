@@ -3,7 +3,7 @@ Example Insertions:
 
 ```javascript
 
-Page.insert(url: “url”, name:  “name”, posts: [“urls of pages”], created: ISODate(now))
+Page.insert(url: “url”, name:  “name”, posts: [“urls of pages”], , like: 0, love: 1, haha: 1, wow: 1, sad: 1, angry: 1, created: ISODate(now))
 
 Post.insert(url: “url”, text: “text”, page: “url”,  phrases: [“keywords”], comments: [“keywords from comments”], like: 0, love: 1, haha: 1, wow: 1, sad: 1, angry: 1, date: ISODate(post_time), created: ISODate(now))
 
