@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 import urllib2
 import json
 import datetime
@@ -177,7 +177,9 @@ def csv_to_json(page_id):
     for row in reader:
         json.dump(row, json_file)
         json_file.write('\n')
-    return json_file
+
+    resp = json_response(json_file, status_code=201)
+    return resp
 
 @app.route('/')
 def index():
