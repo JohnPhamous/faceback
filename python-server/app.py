@@ -15,18 +15,19 @@ access_token = app_id + "|" + app_secret
 
 def request_all(url):
     req = urllib2.Request(url)
-    success = False
-    while success is False:
-        try:
-            response = urllib2.urlopen(req)
-            if response.getcode() == 200:
-                success = True
-        except Exception, e:
-            print e
-            time.sleep(5)
-
-            print "Error for URL %s: %s" % (url, datetime.datetime.now())
-            print "Retrying."
+    response = urllib2.urlopen(req)
+    # success = False
+    # while success is False:
+    #     try:
+    #         response = urllib2.urlopen(req)
+    #         if response.getcode() == 200:
+    #             success = True
+    #     except Exception, e:
+    #         print e
+    #         time.sleep(5)
+    #
+    #         print "Error for URL %s: %s" % (url, datetime.datetime.now())
+    #         print "Retrying."
 
     return response.read()
 
@@ -186,8 +187,9 @@ def get_task():
     all_args = request.args.lists()
     fb_url = str(all_args[0][0])
     fb_id = fb_url.split('/')
-    scrapeFacebookPageFeedStatus(fb_id[3], access_token)
-
+    if not os.path.isfile('data/%s_facebook_statuses.csv' % fb_id[3]):
+        scrapeFacebookPageFeedStatus(fb_id[3], access_token)
+    print("Data exist already, skipping scrape")
     return csv_to_json(fb_id[3])
 
     # return fb_url
