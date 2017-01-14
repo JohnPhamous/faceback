@@ -7,7 +7,7 @@ import config
 
 app_id = config.app_id
 app_secret = config.app_secret
-page_id = "citrushack"
+page_id = "pokemon"
 
 access_token = app_id + "|" + app_secret
 
@@ -117,19 +117,20 @@ def processFacebookPageFeedStatus(status, access_token):
     num_sads = get_num_total_reactions('sad', reactions)
     num_angrys = get_num_total_reactions('angry', reactions)
 
-    positive_sentiment = num_loves + num_wows + num_likes + num_shares
+    good_reception = num_loves + num_wows + num_likes + num_shares
+    bad_reception = 1.5*num_sads + 2*num_angrys
     # Return a tuple of all processed data
     return (status_id, status_message, link_name, status_type, status_link,
             status_published, num_reactions, num_comments, num_shares,
-            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, positive_sentiment)
+            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, good_reception, bad_reception)
 
 def scrapeFacebookPageFeedStatus(page_id, access_token):
-    with open('%s_facebook_statuses.csv' % page_id, 'wb') as file:
+    with open('data/%s_facebook_statuses.csv' % page_id, 'wb') as file:
         w = csv.writer(file)
         w.writerow(["status_id", "status_message", "link_name", "status_type",
                     "status_link", "status_published", "num_reactions",
                     "num_comments", "num_shares", "num_likes", "num_loves",
-                    "num_wows", "num_hahas", "num_sads", "num_angrys", "positive_sentiment"])
+                    "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception"])
 
         has_next_page = True
         num_processed = 0   # keep a count on how many we've processed
