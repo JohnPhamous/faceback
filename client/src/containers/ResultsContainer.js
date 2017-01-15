@@ -102,13 +102,24 @@ export default React.createClass({
 			wordmap_keys = Object.keys(wordmap)
 
 		for(var i = 0; i < wordmap_keys.length; i++) {
-			wordcloud_map.push([wordmap_keys[i], wordmap[wordmap_keys[i]]])
+			if (wordmap[wordmap_keys[i]] > 10){
+				wordcloud_map.push([wordmap_keys[i], wordmap[wordmap_keys[i]]])
+			}
 		}
 
 		var wordcloud_element = document.getElementById('wordcloud')
 
+		var colors = ['#14c4ff', '#ffe251', '#015aba', '#e5230d', '#ff3fc5'] //blue, orange, yellow, blue, pink
+
 		wordcloud(wordcloud_element, {
-			list: wordcloud_map
+			list: wordcloud_map,
+			backgroundColor: '#e8fcff',
+			fontFamily: 'serif',
+			color: function () {
+    				return colors[Math.floor(Math.random() * 5)];
+  			},
+  			rotateRatio: 0,
+			minSize: 16
 		})
 	},
 	aggregateSentiments(pageData) {
