@@ -39,54 +39,56 @@ export default React.createClass({
 		})
 
 		this.createWordMap(pageData)
+		this.aggregateSentiments(pageData)
 
 		this.setState({
 			data: [
 			    {
 			        value: reactions.num_likes,
-			        color: "#46BFBD",
-			        highlight: "#5AD3D1",
-			        label: "Likes"
+			        color: '#46BFBD',
+			        highlight: '#5AD3D1',
+			        label: 'Likes'
 			    },
 			    {
 			        value:  reactions.num_loves,
-			        color:"#F7464A",
-			        highlight: "#FF5A5E",
-			        label: "Loves"
+			        color:'#F7464A',
+			        highlight: '#FF5A5E',
+			        label: 'Loves'
 			    },
 			    {
 			        value:  reactions.num_hahas,
-			        color: "#FDB45C",
-			        highlight: "#FFC870",
-			        label: "Hahas"
+			        color: '#FDB45C',
+			        highlight: '#FFC870',
+			        label: 'Hahas'
 			    },			    {
 			        value:  reactions.num_wows,
-			        color: "#FDB45C",
-			        highlight: "#FFC870",
-			        label: "Wows"
+			        color: '#FDB45C',
+			        highlight: '#FFC870',
+			        label: 'Wows'
 			    },
 			    {
 			        value: reactions.num_sads,
-			        color: "#46BFBD",
-			        highlight: "#5AD3D1",
-			        label: "Sads"
+			        color: '#46BFBD',
+			        highlight: '#5AD3D1',
+			        label: 'Sads'
 			    },
 			    {
 			        value: reactions.num_angrys,
-			        color: "#FDB45C",
-			        highlight: "#FFC870",
-			        label: "Angrys"
+			        color: '#FDB45C',
+			        highlight: '#FFC870',
+			        label: 'Angrys'
 			    }
 			]
 		})
 	},
 	createWordMap(pageData) {
 		var wordmap = {}
-		for(var i = 0; i < pageData.length; i++) {
+		for(var i = 0; i < pageData.length && pageData[i].reduce_message != "ERROR"; i++) {
 			pageData[i].reduce_message = JSON.parse(pageData[i].reduce_message.replace(/'/g, '"'))
 
 			for(var j = 0; j < pageData[i].reduce_message.length; j++) {
 				var wordAttr = wordmap[pageData[i].reduce_message[j]]
+
 				if (wordAttr) {
 					wordmap[pageData[i].reduce_message[j]]++
 				} else {
@@ -100,14 +102,41 @@ export default React.createClass({
 			wordmap_keys = Object.keys(wordmap)
 
 		for(var i = 0; i < wordmap_keys.length; i++) {
-			wordcloud_map.push([wordmap_keys[i], wordmap[wordmap_keys[i]]])
+			if (wordmap[wordmap_keys[i]] > 10){
+				wordcloud_map.push([wordmap_keys[i], wordmap[wordmap_keys[i]]])
+			}
 		}
 
 		var wordcloud_element = document.getElementById('wordcloud')
 
+		var colors = ['#14c4ff', '#ffe251', '#015aba', '#e5230d', '#ff3fc5'] //blue, orange, yellow, blue, pink
+
 		wordcloud(wordcloud_element, {
-			list: wordcloud_map
+			list: wordcloud_map,
+			backgroundColor: '#e8fcff',
+			fontFamily: 'serif',
+			color: function () {
+    				return colors[Math.floor(Math.random() * 5)];
+  			},
+  			rotateRatio: 0,
+			minSize: 16
 		})
+	},
+	aggregateSentiments(pageData) {
+		var
+			totalSentiment = 0,
+			sentimentSize = 0
+
+		for(var i = 0; i < pageData.length; i++) {
+
+			sentimentSize +=
+				parseInt(pageData[i]['neg_words'])
+				+ parseInt(pageData[i]['pos_words'])
+
+			totalSentiment += parseInt(pageData[i]['pos_words']) - parseInt(pageData[i]['neg_words'])
+		}
+
+		console.log(totalSentiment / sentimentSize);
 	},
 	render() {
 		return (
