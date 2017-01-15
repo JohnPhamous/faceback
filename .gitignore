@@ -3,3 +3,4 @@ config.py
 node_modules/
 client/src/config/
 server/config/
+*.pem
