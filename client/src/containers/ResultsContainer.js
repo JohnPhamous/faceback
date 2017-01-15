@@ -118,7 +118,8 @@ export default React.createClass({
 			color: function () {
     				return colors[Math.floor(Math.random() * 5)];
   			},
-  			rotateRatio: 0
+  			rotateRatio: 0,
+			minSize: 16
 		})
 	},
 	aggregateSentiments(pageData) {
