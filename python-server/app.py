@@ -300,6 +300,10 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
                 comments = getFacebookCommentFeedData(status['status_id'],
                                                       access_token, 100)
 
+                if num_processed >= 10000:
+                    print("processed over 10,0000 comments, stopping")
+                    break
+
                 while has_next_page and comments is not None:
                     for comment in comments['data']:
                         w.writerow(processFacebookComment(comment,
