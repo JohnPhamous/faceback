@@ -7,8 +7,14 @@ export default React.createClass({
 		url: React.PropTypes.string.isRequired,
 	},
 	render() {
+		var jumbotron_style = {
+			background: 'transparent',
+		}
+
 		return (
-			<div className='jumbotron col-sm-12 text-center'>
+			<div
+				className='jumbotron col-sm-12 text-center'
+				style={ jumbotron_style }>
 				<form onSubmit={ this.props.submitUrl }>
 					<input
 						type='text'
@@ -16,7 +22,9 @@ export default React.createClass({
 						placeholder='Facebook Page URL'
 						onChange={ this.props.updateUrl }
 						value={ this.props.url }/>
-				
+
+					<br />
+
 					<button className='btn btn-lg btn-success'>
 						Analyze
 					</button>

@@ -3,11 +3,11 @@ var
 	UNKNOWN = require('../config/Unknown')
 
 module.exports = {
-	getPageData(_url) {
+	getPageData(_url, _kind) {
 		return request
 			.get(`${ UNKNOWN.baseUrl }/req`)
 			.query({ url: _url })
-			.query({ kind: "s" })
+			.query({ kind: _kind })
 			.then(pageData => {
 				return JSON.parse(pageData.text);
 			})
