@@ -25,14 +25,15 @@ var phraseSchema = new Schema({
     // Default Fields //
     ////////////////////
 
-    phrase: {
+    pageId: {   //each owner has different phrases, find by pageId and phrase (2 fields needed)
         type: String,
         unique: true,
         required: true,
         dropDups: true,
         index: true
     },
-    posts: [String], //URLs
+    phrase: String,
+    posts: [String], //post ids
 
     //////////////////////
     // Timestamp Fields //

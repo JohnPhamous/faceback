@@ -1,56 +1,86 @@
 import React from 'react'
 import Results from '../components/Results'
+import Unknown from '../services/Unknown'
 
 export default React.createClass({
 	contextTypes: {
 		router: React.PropTypes.object.isRequired
 	},
 	getInitialState() {
+		Unknown
+			.getPageData(this.props.routeParams.url)
+			.then(pageData => {
+				this.updatePageData(pageData.data);
+			})
+
 		return {
-			pieData: [
+			data: []
+		}
+	},
+	updatePageData(pageData) {
+		var reactions = pageData.reduce((acc, elem) => {
+			return {
+				num_angrys: acc.num_angrys + parseInt(elem.num_angrys),
+				num_hahas: acc.num_hahas + parseInt(elem.num_hahas),
+				num_likes: acc.num_likes + parseInt(elem.num_likes),
+				num_loves: acc.num_loves + parseInt(elem.num_loves),
+				num_sads: acc.num_sads + parseInt(elem.num_sads),
+				num_wows: acc.num_wows + parseInt(elem.num_wows),
+			}
+		}, {
+			num_angrys: 0,
+			num_hahas: 0,
+			num_likes: 0,
+			num_loves: 0,
+			num_sads: 0,
+			num_wows: 0,
+		})
+
+		this.setState({
+			data: [
 			    {
-			        value: 100,
+			        value: reactions.num_likes,
 			        color:"#F7464A",
 			        highlight: "#FF5A5E",
-			        label: "Like"
+			        label: "Likes"
 			    },
 			    {
-			        value: 30,
+			        value:  reactions.num_loves,
 			        color: "#46BFBD",
 			        highlight: "#5AD3D1",
-			        label: "Love"
+			        label: "Loves"
 			    },
 			    {
-			        value: 70,
+			        value:  reactions.num_hahas,
 			        color: "#FDB45C",
 			        highlight: "#FFC870",
-			        label: "Haha"
+			        label: "Hahas"
 			    },			    {
-			        value: 10,
+			        value:  reactions.num_wows,
 			        color:"#F7464A",
 			        highlight: "#FF5A5E",
-			        label: "Wow"
+			        label: "Wows"
 			    },
 			    {
-			        value: 3,
+			        value: reactions.num_sads,
 			        color: "#46BFBD",
 			        highlight: "#5AD3D1",
-			        label: "Sad"
+			        label: "Sads"
 			    },
 			    {
-			        value: 6,
+			        value: reactions.num_angrys,
 			        color: "#FDB45C",
 			        highlight: "#FFC870",
-			        label: "Angry"
+			        label: "Angrys"
 			    }
 			]
-		}
+		})
 	},
 	render() {
 		return (
 			<Results
 				url={ this.props.routeParams.url }
-				pieData={ this.state.pieData }/>
+				data={ this.state.data }/>
 		)
 	}
 })

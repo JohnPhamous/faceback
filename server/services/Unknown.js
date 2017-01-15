@@ -1,7 +1,13 @@
-var request = require('superagent')
+var
+	request = require('superagent'),
+	UNKNOWN = require('../config/Unknown')
 
 module.exports = {
 	getPageData(url) {
-		return `No Page was found at url: ${ url }`
+		return request
+			.get(`${ UNKNOWN.baseUrl }/req?${ encodeURIComponent(url) }`)
+			.then(pageData => {
+				return JSON.parse(pageData.text);
+			})
 	}
 }

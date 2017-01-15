@@ -25,7 +25,7 @@ var postSchema = new Schema({
     // Default Fields //
     ////////////////////
 
-    url: {
+    postId: {
         type: String,
         unique: true,
         required: true,
@@ -33,9 +33,9 @@ var postSchema = new Schema({
         index: true
     },
     text: String,
-    page: String,
-    phrases: [String],
-    comments: [String], // most common key words from comments
+    pageId: String,
+    phrases: [String], 
+    comments: [String], //(?not used yet) most common key words from comments
     like: Number,
     love: Number,
     haha: Number,

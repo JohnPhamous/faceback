@@ -1,10 +1,9 @@
 import axios from 'axios'
+import UNKNOWN from '../config/Unknown'
 
 export default {
-	getPosts(var url) {
-		return axios.get(``)
-	},
-	getReactions(var postId) {
-		return axios.get(``)
+	getPageData(url) {
+		return axios
+			.get(`${ UNKNOWN.baseUrl }/page/${ encodeURIComponent(url) }`)
 	},
 }

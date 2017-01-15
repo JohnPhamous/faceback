@@ -4,19 +4,27 @@ import { Pie as PieChart } from 'react-chartjs'
 export default React.createClass({
 	propTypes: {
 		url: React.PropTypes.string.isRequired,
-		pieData: React.PropTypes.object.isRequired
+		data: React.PropTypes.array.isRequired
 	},
 	render() {
-		console.log(this.props.pieData);
-
 		return (
 			<div className='col-sm-12'>
-				Data for { this.props.url }
-
-				<PieChart
-					data={ this.props.pieData }
-					width='200'
-					height='200'/>
+				<div className="row">
+					<div className="col-sm-12">
+						<h2>
+							Data for { this.props.url }
+						</h2>
+					</div>
+				</div>
+				
+				<div className="row">
+					<div className="col-sm-6">
+						<PieChart
+							data={ this.props.data }
+							width='400'
+							height='400'/>
+					</div>
+				</div>
 			</div>
 		)
 	}
