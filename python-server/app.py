@@ -19,6 +19,8 @@ access_token = app_id + "|" + app_secret
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 nltk.download("stopwords")
+
+# nltk.download('all')
 ## Cited: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O'Reilly Media Inc. ##
 stopwords = nltk.corpus.stopwords.words('english')
 
@@ -135,17 +137,20 @@ def processFacebookPageFeedStatus(status, access_token):
     good_reception = num_loves + num_wows + .5*num_likes + 1.5*num_shares
     bad_reception = 1.5*num_sads + 2*num_angrys
 
+    with open('positive-words.txt') as f1:
+        pos_sen = f1.read().splitlines()
+    with open('negative-words.txt') as f2:
+        neg_sen = f2.read().splitlines()
+
     # sentiment analysis
     pos_words = 0
     neg_words = 0
     neu_words = 0
 
-    # tokenized_sent = [tokenizer.tokenize(i) for i in reduce_message]
-
     for word in reduce_message:
-        if word in opinion_lexicon.positive():
+        if word in pos_sen:
             pos_words += 1
-        elif word in opinion_lexicon.negative():
+        elif word in neg_sen:
             neg_words += 1
         else:
             neu_words += 1
@@ -351,6 +356,7 @@ def get_task():
     # Input is the Facebook URL
     all_args = request.args.lists()
     url = request.args.get('url')
+    print(url)
     kind = request.args.get('kind')
     fb_id = url.split('/')
 
