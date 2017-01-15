@@ -25,7 +25,7 @@ var postSchema = new Schema({
     // Default Fields //
     ////////////////////
 
-    url: {
+    id: {
         type: String,
         unique: true,
         required: true,
@@ -33,7 +33,7 @@ var postSchema = new Schema({
         index: true
     },
     text: String,
-    page: String,
+    pageId: String,
     phrases: [String],
     comments: [String], // most common key words from comments
     like: Number,
