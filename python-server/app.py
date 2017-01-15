@@ -90,7 +90,7 @@ def processFacebookPageFeedStatus(status, access_token):
     try:
         reduce_message = reduceMessage(status_message)
     except UnicodeDecodeError:
-        reduce_message = "ERROR encoding"
+        reduce_message = "ERROR"
         pass
     link_name = '' if 'name' not in status.keys() else \
             unicode_normalize(status['name'])
@@ -158,7 +158,9 @@ def processFacebookPageFeedStatus(status, access_token):
     # Return a tuple of all processed data
     return (status_id, status_message, link_name, status_type, status_link,
             status_published, num_reactions, num_comments, num_shares,
-            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, good_reception, bad_reception, reduce_message, pos_words, neg_words, neu_words)
+            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys,
+            good_reception, bad_reception, reduce_message, pos_words,
+            neg_words, neu_words)
 
 def scrapeFacebookPageFeedStatus(page_id, access_token):
     with open('data/%s_facebook_statuses.csv' % page_id, 'wb') as file:
@@ -166,7 +168,9 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
         w.writerow(["status_id", "status_message", "link_name", "status_type",
                     "status_link", "status_published", "num_reactions",
                     "num_comments", "num_shares", "num_likes", "num_loves",
-                    "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message", "pos_words", "neg_words", "neu_words"])
+                    "num_wows", "num_hahas", "num_sads", "num_angrys",
+                    "good_reception", "bad_reception", "reduce_message",
+                    "pos_words", "neg_words", "neu_words"])
 
         has_next_page = True
         num_processed = 0   # keep a count on how many we've processed
@@ -243,17 +247,41 @@ def processFacebookComment(comment, status_id, parent_id=''):
     comment_published = comment_published.strftime(
         '%Y-%m-%d %H:%M:%S')  # best time format for spreadsheet programs
 
-    # Return a tuple of all processed data
+    try:
+        reduce_message = reduceMessage(comment_message)
+    except UnicodeDecodeError:
+        reduce_message = "ERROR"
+        pass
+    with open('positive-words.txt') as f1:
+        pos_sen = f1.read().splitlines()
+    with open('negative-words.txt') as f2:
+        neg_sen = f2.read().splitlines()
 
+    # sentiment analysis
+    pos_words = 0
+    neg_words = 0
+    neu_words = 0
+
+    for word in reduce_message:
+        if word in pos_sen:
+            pos_words += 1
+        elif word in neg_sen:
+            neg_words += 1
+        else:
+            neu_words += 1
+
+    # Return a tuple of all processed data
     return (comment_id, status_id, parent_id, comment_message,
-            comment_published, comment_likes)
+            comment_published, comment_likes, reduce_message, pos_words,
+             neg_words, neu_words)
 
 
 def scrapeFacebookPageFeedComments(page_id, access_token):
     with open('data/%s_facebook_comments.csv' % page_id, 'wb') as file:
         w = csv.writer(file)
         w.writerow(["comment_id", "status_id", "parent_id",
-                    "comment_message", "comment_published", "comment_likes"])
+                    "comment_message", "comment_published", "comment_likes",
+                     "reduce_message", "pos_words", "neg_words", "neu_words"])
 
         num_processed = 0   # keep a count on how many we've processed
         scrape_starttime = datetime.datetime.now()
@@ -329,14 +357,24 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
         print "\nDone!\n%s Comments Processed in %s" % \
             (num_processed, datetime.datetime.now() - scrape_starttime)
 
-def csv_to_json(page_id, kind):
+def csv_to_json_s(page_id, kind):
     print("Converting csv to json")
     csv_file = open('data/{}_facebook_{}.csv'.format(page_id, kind), 'rU')
-    reader = csv.DictReader(csv_file, fieldnames = ( "status_id",
+    reader = csv.DictReader(csv_file, fieldnames = ("status_id",
                 "status_message", "link_name", "status_type",
                 "status_link", "status_published", "num_reactions",
                 "num_comments", "num_shares", "num_likes", "num_loves",
-                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message", "pos_words", "neg_words", "neu_words"))
+                "num_wows", "num_hahas", "num_sads", "num_angrys",
+                "good_reception", "bad_reception", "reduce_message",
+                "pos_words", "neg_words", "neu_words"))
+    out = jsonify([row for row in reader])
+    print(type(out))
+    return out
+
+def csv_to_json_c(page_id, kind):
+    print("Converting csv to json")
+    csv_file = open('data/{}_facebook_{}.csv'.format(page_id, kind), 'rU')
+    reader = csv.DictReader(csv_file, fieldnames = ("comment_id", "status_id", "parent_id","comment_message", "comment_published", "comment_likes", "reduce_message", "pos_words", "neg_words", "neu_words"))
     out = jsonify([row for row in reader])
     print(type(out))
     return out
@@ -344,12 +382,6 @@ def csv_to_json(page_id, kind):
 @app.route('/')
 def index():
     return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?https://www.facebook.com/CitrusHack/ for example. <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
-
-@app.route('/test', methods=['GET'])
-def send():
-    url = request.args.get('url')
-    kind = request.args.get('kind')
-    return url + " " + kind
 
 @app.route('/req', methods=['GET'])
 def get_task():
@@ -366,6 +398,7 @@ def get_task():
             scrapeFacebookPageFeedStatus(fb_id[3], access_token)
         else:
             print("Repeated query, using cache for statuses")
+        return csv_to_json_s(fb_id[3], "statuses")
 
     if kind == "c" or kind == "sc":
         if not os.path.isfile('data/%s_facebook_comments.csv' % fb_id[3]):
@@ -373,8 +406,9 @@ def get_task():
             scrapeFacebookPageFeedComments(fb_id[3], access_token)
         else:
             print("Repeated query, using cache for comments")
+        return csv_to_json_c(fb_id[3], "comments")
 
-    return csv_to_json(fb_id[3], "statuses")
+
 
 if __name__ == '__main__':
     app.debug = True
