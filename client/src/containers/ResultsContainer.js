@@ -109,10 +109,15 @@ export default React.createClass({
 
 		var wordcloud_element = document.getElementById('wordcloud')
 
+		var colors = ['#14c4ff', '#ffe251', '#015aba', '#e5230d', '#ff3fc5'] //blue, orange, yellow, blue, pink
+
 		wordcloud(wordcloud_element, {
 			list: wordcloud_map,
 			backgroundColor: '#e8fcff',
-  			color: '#14c4ff',
+			fontFamily: 'serif',
+			color: function () {
+    				return colors[Math.floor(Math.random() * 5)];
+  			},
   			rotateRatio: 0
 		})
 	},
