@@ -25,7 +25,7 @@ var phraseSchema = new Schema({
     // Default Fields //
     ////////////////////
 
-    pageUrl: {
+    pageId: {   //each owner has different phrases, find by pageId and phrase (2 fields needed)
         type: String,
         unique: true,
         required: true,
@@ -33,7 +33,7 @@ var phraseSchema = new Schema({
         index: true
     },
     phrase: String,
-    posts: [String], //URLs
+    posts: [String], //post ids
 
     //////////////////////
     // Timestamp Fields //
