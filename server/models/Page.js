@@ -25,7 +25,7 @@ var pageSchema = new Schema({
     // Default Fields //
     ////////////////////
 
-    url: {
+    pageId: {
         type: String,
         unique: true,
         required: true,
@@ -33,7 +33,7 @@ var pageSchema = new Schema({
         index: true
     },
     name: String,
-    posts: [String], //URLs
+    posts: [String], //pageIds
     phrases: [String],
     like: Number, //aggregate of all posts, avoiding recal
     love: Number,
