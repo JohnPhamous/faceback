@@ -1,5 +1,5 @@
 comment_id,status_id,parent_id,comment_message,comment_published,comment_likes,reduce_message,pos_words,neg_words,neu_words
-867034986766794_867087543428205,462848240518806_867035056766787,,"Looking good Daniel,but what are you up to??? 😇😇",2016-10-31 01:33:35,0,ERROR encoding,0,0,14
+867034986766794_867087543428205,462848240518806_867035056766787,,"Looking good Daniel,but what are you up to??? 😇😇",2016-10-31 01:33:35,0,ERROR,0,0,5
 867034986766794_867288516741441,462848240518806_867035056766787,,"Wait, hacking is a sport now?....",2016-10-31 07:40:38,0,"['wait', 'hacking', 'sport']",0,0,3
 859409694195990_859418367528456,462848240518806_859409694195990,,So meta...,2016-10-18 22:06:25,1,['meta'],0,0,1
 854270051376621_854911804645779,462848240518806_854270051376621,,Bryan Rene Ayala-Rivera,2016-10-11 18:16:50,1,"['bryan', 'rene']",0,0,2

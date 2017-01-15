@@ -11,7 +11,7 @@ file_id = "DonaldTrump"
 access_token = app_id + "|" + app_secret
 
 
-def request_until_succeed(url):
+def request_all(url):
     req = urllib2.Request(url)
     success = False
     while success is False:
@@ -32,15 +32,12 @@ def request_until_succeed(url):
     return response.read()
 
 # Needed to write tricky unicode correctly to csv
-
-
 def unicode_normalize(text):
     return text.translate({0x2018: 0x27, 0x2019: 0x27, 0x201C: 0x22,
                            0x201D: 0x22, 0xa0: 0x20}).encode('utf-8')
 
 
 def getFacebookCommentFeedData(status_id, access_token, num_comments):
-
     # Construct the URL string
     base = "https://graph.facebook.com/v2.6"
     node = "/%s/comments" % status_id
@@ -50,7 +47,7 @@ def getFacebookCommentFeedData(status_id, access_token, num_comments):
     url = base + node + fields + parameters
 
     # retrieve data
-    data = request_until_succeed(url)
+    data = request_all(url)
     if data is None:
         return None
     else:
@@ -146,7 +143,7 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
                                 if 'paging' in subcomments:
                                     if 'next' in subcomments['paging']:
                                         subcomments = json.loads(
-                                            request_until_succeed(
+                                            request_all(
                                                 subcomments['paging']
                                                 ['next']))
                                     else:
@@ -163,7 +160,7 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
 
                     if 'paging' in comments:
                         if 'next' in comments['paging']:
-                            comments = json.loads(request_until_succeed(
+                            comments = json.loads(request_all(
                                 comments['paging']['next']))
                         else:
                             has_next_page = False

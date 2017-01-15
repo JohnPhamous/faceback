@@ -8,6 +8,7 @@ neu_words = 0
 sentence = "this is good"
 tokenized_sent = [word.lower() for word in
                 tokenizer.tokenize(sentence)]
+
 print(type(tokenized_sent))
 for word in tokenized_sent:
         if word in opinion_lexicon.positive():
