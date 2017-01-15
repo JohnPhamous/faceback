@@ -13,6 +13,20 @@ app_secret = config.app_secret
 page_id = "pokemon"
 access_token = app_id + "|" + app_secret
 
+##nltk.download('punkt')
+##nltk.download('wordnet')
+##nltk.download("corpus")
+
+## Cited: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O'Reilly Media Inc. ##
+stopwords = nltk.corpus.stopwords.words('english')
+
+def reduceMessage(status_message):
+    tokens = nltk.word_tokenize(status_message)
+    tokens = [token for token in tokens if token not in stopwords and token.isalpha() and len(token) > 1]
+    tokens = nltk.pos_tag(tokens)
+    tokens = [token[0] for token in tokens if token[1] not in ["RB", "CD"]]
+    return tokens
+    
 def request_all(url):
     req = urllib2.Request(url)
     response = urllib2.urlopen(req)
@@ -77,7 +91,7 @@ def processFacebookPageFeedStatus(status, access_token):
     status_id = status['id']
     status_message = '' if 'message' not in status.keys() else \
             unicode_normalize(status['message'])
-    # reduce_message =
+    reduce_message = reduceMessage(status_message)
     link_name = '' if 'name' not in status.keys() else \
             unicode_normalize(status['name'])
     status_type = status['type']
@@ -126,7 +140,7 @@ def processFacebookPageFeedStatus(status, access_token):
     # Return a tuple of all processed data
     return (status_id, status_message, link_name, status_type, status_link,
             status_published, num_reactions, num_comments, num_shares,
-            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, good_reception, bad_reception)
+            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, good_reception, bad_reception, reduce_message)
 
 def scrapeFacebookPageFeedStatus(page_id, access_token):
     with open('data/%s_facebook_statuses.csv' % page_id, 'wb') as file:
@@ -134,7 +148,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
         w.writerow(["status_id", "status_message", "link_name", "status_type",
                     "status_link", "status_published", "num_reactions",
                     "num_comments", "num_shares", "num_likes", "num_loves",
-                    "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception"])
+                    "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message"])
 
         has_next_page = True
         num_processed = 0   # keep a count on how many we've processed
@@ -175,7 +189,7 @@ def csv_to_json(page_id):
                 "status_message", "link_name", "status_type",
                 "status_link", "status_published", "num_reactions",
                 "num_comments", "num_shares", "num_likes", "num_loves",
-                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception"))
+                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message"))
     out = jsonify([row for row in reader])
     print(type(out))
     return out
