@@ -1,8 +1,9 @@
 import axios from 'axios'
+import UNKNOWN from '../config/Unknown'
 
 export default {
 	getPageData(url) {
 		return axios
-			.get(`localhost:8000/api/page/${ encodeURIComponent(url) }`)
+			.get(`${ UNKNOWN.baseUrl }/page/${ encodeURIComponent(url) }`)
 	},
 }

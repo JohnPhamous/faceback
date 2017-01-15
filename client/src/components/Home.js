@@ -9,8 +9,6 @@ export default React.createClass({
 	render() {
 		return (
 			<div className='jumbotron col-sm-12 text-center'>
-				<h1>Unknown</h1>
-				
 				<form onSubmit={ this.props.submitUrl }>
 					<input
 						type='text'
