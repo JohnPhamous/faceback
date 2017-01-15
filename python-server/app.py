@@ -7,6 +7,8 @@ import time
 import config
 import os
 import nltk
+from nltk.corpus import opinion_lexicon
+from nltk.tokenize import treebank
 
 app = Flask(__name__)
 app_id = config.app_id
@@ -20,11 +22,15 @@ nltk.download("stopwords")
 ## Cited: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O'Reilly Media Inc. ##
 stopwords = nltk.corpus.stopwords.words('english')
 
+# sentiment analysis lookup table
+tokenizer = treebank.TreebankWordTokenizer()
+
 def reduceMessage(status_message):
     tokens = nltk.word_tokenize(status_message)
     tokens = [token for token in tokens if token not in stopwords and token.isalpha() and len(token) > 1]
     tokens = nltk.pos_tag(tokens)
     tokens = [token[0] for token in tokens if token[1] not in ["RB", "CD"]]
+    tokens = [token.lower() for token in tokens]
     return tokens
 
 def request_all(url):
@@ -128,10 +134,26 @@ def processFacebookPageFeedStatus(status, access_token):
 
     good_reception = num_loves + num_wows + .5*num_likes + 1.5*num_shares
     bad_reception = 1.5*num_sads + 2*num_angrys
+
+    # sentiment analysis
+    pos_words = 0
+    neg_words = 0
+    neu_words = 0
+
+    # tokenized_sent = [tokenizer.tokenize(i) for i in reduce_message]
+
+    for word in reduce_message:
+        if word in opinion_lexicon.positive():
+            pos_words += 1
+        elif word in opinion_lexicon.negative():
+            neg_words += 1
+        else:
+            neu_words += 1
+
     # Return a tuple of all processed data
     return (status_id, status_message, link_name, status_type, status_link,
             status_published, num_reactions, num_comments, num_shares,
-            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, good_reception, bad_reception, reduce_message)
+            num_likes, num_loves, num_wows, num_hahas, num_sads, num_angrys, good_reception, bad_reception, reduce_message, pos_words, neg_words, neu_words)
 
 def scrapeFacebookPageFeedStatus(page_id, access_token):
     with open('data/%s_facebook_statuses.csv' % page_id, 'wb') as file:
@@ -139,7 +161,7 @@ def scrapeFacebookPageFeedStatus(page_id, access_token):
         w.writerow(["status_id", "status_message", "link_name", "status_type",
                     "status_link", "status_published", "num_reactions",
                     "num_comments", "num_shares", "num_likes", "num_loves",
-                    "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message"])
+                    "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message", "pos_words", "neg_words", "neu_words"])
 
         has_next_page = True
         num_processed = 0   # keep a count on how many we've processed
@@ -309,7 +331,7 @@ def csv_to_json(page_id, kind):
                 "status_message", "link_name", "status_type",
                 "status_link", "status_published", "num_reactions",
                 "num_comments", "num_shares", "num_likes", "num_loves",
-                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message"))
+                "num_wows", "num_hahas", "num_sads", "num_angrys", "good_reception", "bad_reception", "reduce_message", "pos_words", "neg_words", "neu_words"))
     out = jsonify([row for row in reader])
     print(type(out))
     return out
