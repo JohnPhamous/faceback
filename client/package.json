@@ -4,15 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prod": "webpack -p",
-    "start": "webpack-dev-server --inline --content-base . --history-api-fallback"
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:dev": "webpack-dev-server --inline --content-base src --history-api-fallback",
+    "start:prod": "webpack && node server.js"
   },
   "author": "aarohmankad",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.15.2",
     "chart.js": "^1.1.1",
+    "compression": "^1.6.2",
+    "express": "^4.14.0",
     "html-webpack-plugin": "^2.24.1",
+    "if-env": "^1.0.0",
     "react": "^15.4.0",
     "react-chartjs": "^0.8.0",
     "react-dom": "^15.4.0",

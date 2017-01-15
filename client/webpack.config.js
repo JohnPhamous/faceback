@@ -13,15 +13,21 @@ module.exports = {
 	output: {
 		path: __dirname + '/dist',
 		filename: 'index_bundle.js',
+		publicPath: '/',
 	},
 	module: {
 		loaders: [{
 			test: /\.js$/,
 			exclude: /node_modules/,
-			loader: 'babel-loader'
+			loader: 'babel-loader',
 		}]
 	},
-	plugins: [
+	plugins: process.env.NODE_ENV === 'production' ? [
+	   	new webpack.optimize.DedupePlugin(),
+	   	new webpack.optimize.OccurrenceOrderPlugin(),
+		new webpack.optimize.UglifyJsPlugin(),
 		HtmlWebpackPluginConfig,
-	],
+	 ] : [
+	 	HtmlWebpackPluginConfig,
+	 ],
 }
