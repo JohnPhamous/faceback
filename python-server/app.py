@@ -6,6 +6,7 @@ import csv
 import time
 import config
 import os
+import nltk
 
 app = Flask(__name__)
 app_id = config.app_id
@@ -13,10 +14,9 @@ app_secret = config.app_secret
 page_id = "pokemon"
 access_token = app_id + "|" + app_secret
 
-##nltk.download('punkt')
-##nltk.download('wordnet')
-##nltk.download("corpus")
-
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download("stopwords")
 ## Cited: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O'Reilly Media Inc. ##
 stopwords = nltk.corpus.stopwords.words('english')
 
@@ -26,7 +26,7 @@ def reduceMessage(status_message):
     tokens = nltk.pos_tag(tokens)
     tokens = [token[0] for token in tokens if token[1] not in ["RB", "CD"]]
     return tokens
-    
+
 def request_all(url):
     req = urllib2.Request(url)
     response = urllib2.urlopen(req)
@@ -78,7 +78,12 @@ def processFacebookPageFeedStatus(status, access_token):
     status_id = status['id']
     status_message = '' if 'message' not in status.keys() else \
             unicode_normalize(status['message'])
-    reduce_message = reduceMessage(status_message)
+
+    try:
+        reduce_message = reduceMessage(status_message)
+    except UnicodeDecodeError:
+        reduce_message = "ERROR encoding"
+        pass
     link_name = '' if 'name' not in status.keys() else \
             unicode_normalize(status['name'])
     status_type = status['type']
@@ -329,15 +334,15 @@ def get_task():
 
     if kind == "s" or kind == "sc":
         if not os.path.isfile('data/%s_facebook_statuses.csv' % fb_id[3]):
-            scrapeFacebookPageFeedStatus(fb_id[3], access_token)
             print("New query type, scraping now for statuses...")
+            scrapeFacebookPageFeedStatus(fb_id[3], access_token)
         else:
             print("Repeated query, using cache for statuses")
 
     if kind == "c" or kind == "sc":
         if not os.path.isfile('data/%s_facebook_comments.csv' % fb_id[3]):
-            scrapeFacebookPageFeedComments(fb_id[3], access_token)
             print("New query type, scraping now for comments...")
+            scrapeFacebookPageFeedComments(fb_id[3], access_token)
         else:
             print("Repeated query, using cache for comments")
 
