@@ -25,13 +25,14 @@ var phraseSchema = new Schema({
     // Default Fields //
     ////////////////////
 
-    phrase: {
+    pageUrl: {
         type: String,
         unique: true,
         required: true,
         dropDups: true,
         index: true
     },
+    phrase: String,
     posts: [String], //URLs
 
     //////////////////////
