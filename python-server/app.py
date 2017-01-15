@@ -243,17 +243,39 @@ def processFacebookComment(comment, status_id, parent_id=''):
     comment_published = comment_published.strftime(
         '%Y-%m-%d %H:%M:%S')  # best time format for spreadsheet programs
 
-    # Return a tuple of all processed data
+    try:
+        reduce_message = reduceMessage(comment_message)
+    except UnicodeDecodeError:
+        reduce_message = "ERROR encoding"
+        pass
+    with open('positive-words.txt') as f1:
+        pos_sen = f1.read().splitlines()
+    with open('negative-words.txt') as f2:
+        neg_sen = f2.read().splitlines()
 
+    # sentiment analysis
+    pos_words = 0
+    neg_words = 0
+    neu_words = 0
+
+    for word in reduce_message:
+        if word in pos_sen:
+            pos_words += 1
+        elif word in neg_sen:
+            neg_words += 1
+        else:
+            neu_words += 1
+
+    # Return a tuple of all processed data
     return (comment_id, status_id, parent_id, comment_message,
-            comment_published, comment_likes)
+            comment_published, comment_likes, reduce_message, pos_words, neg_words, neu_words)
 
 
 def scrapeFacebookPageFeedComments(page_id, access_token):
     with open('data/%s_facebook_comments.csv' % page_id, 'wb') as file:
         w = csv.writer(file)
         w.writerow(["comment_id", "status_id", "parent_id",
-                    "comment_message", "comment_published", "comment_likes"])
+                    "comment_message", "comment_published", "comment_likes", "reduce_message", "pos_words", "neg_words", "neu_words"])
 
         num_processed = 0   # keep a count on how many we've processed
         scrape_starttime = datetime.datetime.now()
@@ -344,12 +366,6 @@ def csv_to_json(page_id, kind):
 @app.route('/')
 def index():
     return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?https://www.facebook.com/CitrusHack/ for example. <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
-
-@app.route('/test', methods=['GET'])
-def send():
-    url = request.args.get('url')
-    kind = request.args.get('kind')
-    return url + " " + kind
 
 @app.route('/req', methods=['GET'])
 def get_task():
