@@ -9,25 +9,16 @@ export default React.createClass({
 	},
 	getInitialState() {
 		Unknown
-			.getPageData(this.props.routeParams.url, 's')
+			.getPageData(this.props.routeParams.url)
 			.then(pageData => {
+				// console.log(pageData.data);
 				this.updatePageData(pageData.data);
-			})
-
-		Unknown
-			.getPageData(this.props.routeParams.url, 'c')
-			.then(pageData => {
-				this.updateCommentData(pageData.data);
 			})
 
 		return {
 			data: [],
-			options: {
-				animationEasing: 'linear',
-				animationSteps: 50,
-			},
 			sentiment: 0,
-			interactivity: 0,
+			reactionData: {},
 		}
 	},
 	updatePageData(pageData) {
@@ -49,6 +40,14 @@ export default React.createClass({
 			num_wows: 0,
 		})
 
+		var
+			reaction_keys = Object.keys(reactions),
+			total_reactions = 0;
+
+		for (var i = 0; i < reaction_keys.length; i++) {
+			total_reactions += reactions[reaction_keys[i]]
+		}
+
 		this.createWordMap(pageData)
 		this.aggregateSentiments(pageData)
 
@@ -56,63 +55,44 @@ export default React.createClass({
 			data: [
 			    {
 			        value: reactions.num_likes,
-			        color: '#3F51B5',
-			        highlight: '#5C6BC0',
+			        color: '#46BFBD',
+			        highlight: '#5AD3D1',
 			        label: 'Likes'
 			    },
 			    {
 			        value:  reactions.num_loves,
-			        color:'#E91E63',
-			        highlight: '#EC407A',
+			        color:'#F7464A',
+			        highlight: '#FF5A5E',
 			        label: 'Loves'
 			    },
 			    {
 			        value:  reactions.num_hahas,
-			        color: '#009688',
-			        highlight: '#26A69A',
+			        color: '#FDB45C',
+			        highlight: '#FFC870',
 			        label: 'Hahas'
 			    },			    {
 			        value:  reactions.num_wows,
-			        color: '#673AB7',
-			        highlight: '#7E57C2',
+			        color: '#FDB45C',
+			        highlight: '#FFC870',
 			        label: 'Wows'
 			    },
 			    {
 			        value: reactions.num_sads,
-			        color: '#2196F3',
-			        highlight: '#42A5F5',
+			        color: '#46BFBD',
+			        highlight: '#5AD3D1',
 			        label: 'Sads'
 			    },
 			    {
 			        value: reactions.num_angrys,
-			        color: '#F44336',
-			        highlight: '#EF5350',
+			        color: '#FDB45C',
+			        highlight: '#FFC870',
 			        label: 'Angrys'
 			    }
 			],
-		})
-	},
-	updateCommentData(commentData) {
-		var
-			commentInteractivity = 0,
-			commentInteractivitySize = 0
-
-		for (var i = 0; i < commentData.length; i++) {
-			commentInteractivity +=
-				(parseInt(commentData[i].pos_words)
-				- parseInt(commentData[i].neg_words))
-				+ parseInt(commentData[i].comment_likes)
-
-			commentInteractivitySize += 
-				parseInt(commentData[i].pos_words)
-				+ parseInt(commentData[i].neg_words)
-				+ parseInt(commentData[i].comment_likes)
-		}
-
-		var commentInteractivityRatio = commentInteractivity / commentInteractivitySize;
-
-		this.setState({
-			interactivity: commentInteractivityRatio * 100,
+			reactionData: {
+				reactions: reactions,
+				total_reactions: total_reactions,
+			},
 		})
 	},
 	createWordMap(pageData) {
@@ -173,6 +153,7 @@ export default React.createClass({
 		}
 
 		var sentimentRatio = totalSentiment / sentimentSize
+		console.log(sentimentRatio);
 
 		this.setState({
 			sentiment: Math.max(1 - sentimentRatio, sentimentRatio) * 100,
@@ -183,9 +164,7 @@ export default React.createClass({
 			<Results
 				url={ this.props.routeParams.url }
 				data={ this.state.data }
-				options={ this.state.options }
-				sentiment={ this.state.sentiment }
-				interactivity={ this.state.interactivity }/>
+				sentiment={ this.state.sentiment }/>
 		)
 	}
 })

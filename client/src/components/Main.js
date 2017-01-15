@@ -5,7 +5,7 @@ export default React.createClass({
 		return (
 			<div>
 				<a href="/">
-					<h1>Unknown</h1>
+					<h1>Faceback</h1>
 				</a>
 
 				{ this.props.children }

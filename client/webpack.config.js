@@ -13,7 +13,6 @@ module.exports = {
 	output: {
 		path: __dirname + '/dist',
 		filename: 'index_bundle.js',
-		publicPath: '/',
 	},
 	module: {
 		loaders: [{
@@ -22,12 +21,7 @@ module.exports = {
 			loader: 'babel-loader',
 		}]
 	},
-	plugins: process.env.NODE_ENV === 'production' ? [
-	   	new webpack.optimize.DedupePlugin(),
-	   	new webpack.optimize.OccurrenceOrderPlugin(),
-		new webpack.optimize.UglifyJsPlugin(),
-		HtmlWebpackPluginConfig,
-	 ] : [
+	plugins: [
 	 	HtmlWebpackPluginConfig,
 	 ],
 }
