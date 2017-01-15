@@ -102,13 +102,18 @@ export default React.createClass({
 			wordmap_keys = Object.keys(wordmap)
 
 		for(var i = 0; i < wordmap_keys.length; i++) {
-			wordcloud_map.push([wordmap_keys[i], wordmap[wordmap_keys[i]]])
+			if (wordmap[wordmap_keys[i]] > 10){
+				wordcloud_map.push([wordmap_keys[i], wordmap[wordmap_keys[i]]])
+			}
 		}
 
 		var wordcloud_element = document.getElementById('wordcloud')
 
 		wordcloud(wordcloud_element, {
-			list: wordcloud_map
+			list: wordcloud_map,
+			backgroundColor: '#e8fcff',
+  			color: '#14c4ff',
+  			rotateRatio: 0
 		})
 	},
 	aggregateSentiments(pageData) {
