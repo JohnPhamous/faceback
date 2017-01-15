@@ -18,7 +18,7 @@ stopwords = nltk.corpus.stopwords.words('english')
 
 def reduceMessage(status_message):
     tokens = nltk.word_tokenize(status_message)
-    tokens = [token for token in tokens if token not in stopwords and token.isalpha()]
+    tokens = [token for token in tokens if token not in stopwords and token.isalpha() and len(token) > 1]
     tokens = nltk.pos_tag(tokens)
     tokens = [token[0] for token in tokens if token[1] not in ["RB", "CD"]]
     return tokens
