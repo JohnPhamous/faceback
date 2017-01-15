@@ -112,9 +112,10 @@ export default React.createClass({
 		})
 	},
 	aggregateSentiments(pageData) {
-		console.log('aggregateSentiments');
-		var totalSentiment = 0;
-		var sentimentSize = 0;
+		var
+			totalSentiment = 0,
+			sentimentSize = 0
+
 		for(var i = 0; i < pageData.length; i++) {
 
 			sentimentSize +=
