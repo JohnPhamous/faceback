@@ -34,7 +34,7 @@ var pageSchema = new Schema({
     },
     name: String,
     posts: [String], //URLs
-
+    phrases: [String],
     like: Number, //aggregate of all posts, avoiding recal
     love: Number,
     haha: Number,
