@@ -13,6 +13,10 @@ app_secret = config.app_secret
 page_id = "pokemon"
 access_token = app_id + "|" + app_secret
 
+##nltk.download('punkt')
+##nltk.download('wordnet')
+##nltk.download("corpus")
+
 ## Cited: Bird, Steven, Edward Loper and Ewan Klein (2009), Natural Language Processing with Python. O'Reilly Media Inc. ##
 stopwords = nltk.corpus.stopwords.words('english')
 
