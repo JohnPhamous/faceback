@@ -29,9 +29,9 @@ tokenizer = treebank.TreebankWordTokenizer()
 
 def reduceMessage(status_message):
     tokens = nltk.word_tokenize(status_message)
-    tokens = [token for token in tokens if token not in stopwords and token.isalpha() and len(token) > 1]
+    tokens = [token for token in tokens if token not in stopwords and token.isalpha() and len(token) > 2]
     tokens = nltk.pos_tag(tokens)
-    tokens = [token[0] for token in tokens if token[1] not in ["RB", "CD"]]
+    tokens = [token[0] for token in tokens if token[1] not in ["RB", "CD", "DT"]]
     tokens = [token.lower() for token in tokens]
     return tokens
 
@@ -385,7 +385,7 @@ def csv_to_json_c(page_id, kind):
 
 @app.route('/')
 def index():
-    return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?https://www.facebook.com/CitrusHack/ for example. <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
+    return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?url=https://www.facebook.com/CitrusHack/kind=c for example. <br><br> The url parameter is the URL to the Facebook page. We accept 3 different kinds: s(statuses), c(comments), and sc(statuses and comments). Here is how you would make a request for just the comments on a page: https://hackuci2017-social-analysis.herokuapp.com/req?url=https://www.facebook.com/CitrusHack&kind=c <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
 
 @app.route('/req', methods=['GET'])
 def get_task():
