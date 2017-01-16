@@ -8,9 +8,11 @@ Provides a front end made with React for queries. `python-server` is the REST ap
 ### params:
 - s
   - statuses only
+
 - c
   - comments only
--sc
+
+- sc
   - statuses and comments
 
 ## Live Demo
