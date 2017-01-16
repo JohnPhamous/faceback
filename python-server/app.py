@@ -300,8 +300,8 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
                 comments = getFacebookCommentFeedData(status['status_id'],
                                                       access_token, 100)
 
-                if num_processed >= 10000:
-                    print("processed over 10,0000 comments, stopping")
+                if num_processed >= 3000:
+                    print("processed over 3,0000 comments, stopping")
                     break
 
                 while has_next_page and comments is not None:
@@ -345,7 +345,7 @@ def scrapeFacebookPageFeedComments(page_id, access_token):
                         # output progress occasionally to make sure code is not
                         # stalling
                         num_processed += 1
-                        if num_processed % 1000 == 0:
+                        if num_processed % 50 == 0:
                             print "%s Comments Processed: %s" % \
                                 (num_processed, datetime.datetime.now())
 
@@ -385,7 +385,7 @@ def csv_to_json_c(page_id, kind):
 
 @app.route('/')
 def index():
-    return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?url=https://www.facebook.com/CitrusHack/kind=c for example. <br><br> The url parameter is the URL to the Facebook page. We accept 3 different kinds: s(statuses), c(comments), and sc(statuses and comments). Here is how you would make a request for just the comments on a page: https://hackuci2017-social-analysis.herokuapp.com/req?url=https://www.facebook.com/CitrusHack&kind=c <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI)."
+    return "Welcome to our REST API. This is for our <b>HackUCI 2017</b> project. You can make requests with making a GET request to a Facebook page with GET /req?url=https://www.facebook.com/CitrusHack/kind=c for example. <br><br> The url parameter is the URL to the Facebook page. We accept 3 different kinds: s(statuses), c(comments), and sc(statuses and comments). Here is how you would make a request for just the comments on a page: https://hackuci2017-social-analysis.herokuapp.com/req?url=https://www.facebook.com/CitrusHack&kind=c <br><br> This project is by: Aaroh Mankad(UCR), Kevin Wong(UCI), John Pham(UCR), and Raelene Gonzales(UCI). <br><br> Project repo: https://github.com/JohnPhamous/hackuci2017"
 
 @app.route('/req', methods=['GET'])
 def get_task():

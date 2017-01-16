@@ -1,14 +1,17 @@
-# hackuci2017
-Example Insertions:
+# HACK@UCI 2017 Project: FaceBack
 
-```javascript
+Provides a front end made with React for queries. `python-server` is the REST api which allows GET requests which returns formatted json and csv file.
 
-Page.insert(url: “url”, name:  “name”, posts: [“urls of pages”], , like: 0, love: 1, haha: 1, wow: 1, sad: 1, angry: 1, created: ISODate(now))
+## How to make a GET request
+`GET server/req?url=<facebookpageurl?&kind=<param>`
 
-Post.insert(url: “url”, text: “text”, page: “url”,  phrases: [“keywords”], comments: [“keywords from comments”], like: 0, love: 1, haha: 1, wow: 1, sad: 1, angry: 1, date: ISODate(post_time), created: ISODate(now))
+### params:
+- s
+  - statuses only
+- c
+  - comments only
+-sc
+  - statuses and comments
 
-Phrase.insert(phrase: “phrase”, posts: [“urls of posts”], created: ISODate(now))
-
-```
-
-*Note that arrays may be left as [] if empty
+## Live Demo
+https://hackuci2017-social-analysis.herokuapp.com/
